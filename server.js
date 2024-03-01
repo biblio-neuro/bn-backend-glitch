@@ -365,6 +365,22 @@ app.get('/pub-ind-pro', async (req, res) => {
 
 })
 
+
+app.post('/reset-all-data', async (req, res) => {
+    const { passKey } = req.body;
+
+    if(passKey === process.env.REFRESH_ALL_DATA_PASSKEY) {
+      console.log('Resetting downloadInProgress to false!');
+      const rawPublicationDownloadStatus = await fetchRawPublicationDownloadStatus();
+      const { success, timestamp, downloadInProgress, downloadSettingsHash, publicationsSince, message } = rawPublicationDownloadStatus;
+      writeStatus(success, false, currentEnvHash, publicationsSince, message);
+      res.status(200).send({status: true, message: "Successfully set download progress to false. Please use other services as usual. A download will be triggered if needed!"})
+    } else {
+      res.status(403).send({status: false, message: "Invalid Pass Key"});
+    }
+
+})
+
 app.get('/reset-download', async (req, res) => {
   console.log('Resetting downloadInProgress to false!');
   const rawPublicationDownloadStatus = await fetchRawPublicationDownloadStatus();
