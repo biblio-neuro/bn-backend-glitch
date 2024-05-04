@@ -22,7 +22,7 @@ const BASE_FILTER_STR = `
             authorships.institutions.country_code:${base_filter.country},
             primary_location.source.type:${base_filter.publication_type},
             is_paratext:${base_filter.is_paratext},
-            raw_affiliation_string.search:${base_filter.search_term}
+            raw_affiliation_strings.search:${base_filter.search_term}
     `.replace(/ {2,}/g, "\t").replace(/[\r\n\t]/gm, "");
 
 const BASE_PARAMS = {
