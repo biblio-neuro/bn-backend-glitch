@@ -19,7 +19,7 @@ export const collapseHostVenue = (locationObj) => {
 export const collapseAuthorFields = (authorshipsObj) => {
     const authorFields = {}
     const author_positions = ["first", "last"]
-    const author_info_foi = ["id", "display_name", "orcid", "raw_affiliation_string"]
+    const author_info_foi = ["id", "display_name", "orcid"]
     const author_inst_info_foi = ["id", "display_name", "type"]
     author_positions.forEach((authorPos) => {
         const authorsInPos = authorshipsObj.filter((authorObj) => authorObj.author_position === authorPos);
@@ -58,6 +58,17 @@ export const collapseAuthorFields = (authorshipsObj) => {
             }
             authorFields[`author_${authorPos}_institution_${field}`] = value;
         })
+        if(authorsInPos.length === 0) {
+            authorFields[`author_${authorPos}_raw_affiliation_string`] = undefined;
+            return;
+        }
+        let value;
+        if(authorsInPos.length === 1) {
+            value = authorsInPos[0].raw_affiliation_strings.join(';')
+        } else {
+            value = authorsInPos.map((authorInPos) => authorInPos.raw_affiliation_strings.join(';')).join('|')
+        }
+        authorFields[`author_${authorPos}_raw_affiliation_string`] = value; 
     })
 
    return authorFields; 
